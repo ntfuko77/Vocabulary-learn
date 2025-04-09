@@ -1,0 +1,10 @@
+    db.cursor.execute("""CREATE TABLE IF NOT EXISTS unit(
+        unit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        unit_name TEXT NOT NULL,
+        description TEXT NOT NULL
+    )""")
+    db.cursor.execute("""CREATE TABLE IF NOT EXISTS vocabulary(
+        vocabulary TEXT NOT NULL,
+        unit_id INTEGER NOT NULL,
+        description TEXT NOT NULL
+    )""")
