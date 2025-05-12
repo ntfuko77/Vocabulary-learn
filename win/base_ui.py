@@ -2,12 +2,34 @@ from enum import Enum
 from tkinter import *
 
 class BaseUI(Enum):
-    geometry = '600x600'
+    geometry = '600x400'
     title = 'Vocabulary Learn'
-    insert_data_name = ['Word', 'part of speech 1', 'Meaning:1', 'part of speech 2', 'Meaning:2', 'part of speech 3', 'unit']
+    insert_data_name = ('Word', 'part of speech 1', 'Meaning:1', 'part of speech 2', 'Meaning:2', 'part of speech 3', 'unit')
     insert_data_title = 'Insert Data'
-    insert_date_unit_name = ['unit']
+    insert_date_unit_name = ('unit',)
     insert_date_unit_title = 'Insert Unit'
+
+class EventTransfer():
+    """Event transfer class"""
+    def __init__(self,name:str,set_callback):
+        self.name=name
+        self.set_callback=set_callback
+class MenuResponsive():
+    def __init__(self):
+        self.reset_eho=None
+        self.recv=None
+        self.event={}
+    def set_eho_update_callback(self, eho:Label):
+        """Set the callback function to update the label"""
+        def reset_eho(eho:Label,text:str):
+            eho.config(text=text)
+        self.eho=reset_eho
+    def set_submit_callback(self,event:EventTransfer,receive:dict):
+        """Set the callback function to receive data"""
+        self.recv=receive
+        self.event[event.name]=event.set_callback
+
+
 
 class init():
     def __init__(self):
@@ -37,6 +59,37 @@ class init():
             widget.destroy()
         self.top_menu()
         return
+    def Create_insert_data_function(self, name:list, title:str ,typesave_data_function):
+        def insert_data_frame(self,name:list,title:str):
+            self.kill_all_frame()
+            
+            label = Label(self.root, text=title)
+            label.pack()
+            
+            number = len(name)
+            bundle = [[] for i in range(number)]
+            name = zip(name, range(number))
+            name = list(name)
+            for i in range(number):
+                bundle[i].append(Frame(self.root, padx=5 , pady=5))
+                bundle[i].append(Label(bundle[i][0], text=name[i][0]))
+                bundle[i][1].pack(side='left')
+                bundle[i].append(Entry(bundle[i][0]))
+                bundle[i][2].pack(side='left', fill='x', expand=True)
+                bundle[i][0].pack(side='top', fill='x')
+
+            eho = Label(self.root)
+            eho.pack()
+            button = Button(self.root, text='Submit', command=lambda: print(entry.get()))
+            button.pack(side='bottom')
+            def get_bundle_value(name,bundle):
+                out={}
+                for i in range(number):
+                    out[name[i][0]] = bundle[i][2].get()
+                print(out)
+            self.root.bind('<Return>', lambda event: get_bundle_value(name, bundle))
+            return
+        self.insert_data_frame = insert_data_frame
     def insert_data_frame(self,name:list,title:str):
         self.kill_all_frame()
         
@@ -55,15 +108,16 @@ class init():
             bundle[i][2].pack(side='left', fill='x', expand=True)
             bundle[i][0].pack(side='top', fill='x')
 
-
+        eho = Label(self.root)
+        eho.pack()
         button = Button(self.root, text='Submit', command=lambda: print(entry.get()))
         button.pack(side='bottom')
         def get_bundle_value(name,bundle):
             out={}
             for i in range(number):
                 out[name[i][0]] = bundle[i][2].get()
-            print(out)
-        self.root.bind('<Return>', lambda event: get_bundle_value(name, bundle))
+            return(out)
+        self.root.bind('<Return>', lambda event: print(get_bundle_value(name, bundle)))
         return 
 
     def run(self):
