@@ -4,6 +4,10 @@ from tkinter import *
 class BaseUI(Enum):
     geometry = '600x600'
     title = 'Vocabulary Learn'
+    insert_data_name = ['Word', 'part of speech 1', 'Meaning:1', 'part of speech 2', 'Meaning:2', 'part of speech 3', 'unit']
+    insert_data_title = 'Insert Data'
+    insert_date_unit_name = ['unit']
+    insert_date_unit_title = 'Insert Unit'
 
 class init():
     def __init__(self):
@@ -15,8 +19,8 @@ class init():
     def top_menu(self):
         member=Menu(self.root)
         add_menu = Menu(member, tearoff=0)
-        add_menu.add_command(label='Edit', command=lambda: self.insert_data_frame())
-        add_menu.add_command(label='add_unit', command=lambda: print('Search'))
+        add_menu.add_command(label='Edit', command=lambda: self.insert_data_frame(BaseUI.insert_data_name.value, BaseUI.insert_data_title.value))
+        add_menu.add_command(label='add_unit', command=lambda: self.insert_data_frame(BaseUI.insert_date_unit_name.value, BaseUI.insert_date_unit_title.value))
         member.add_cascade(label='Add..', menu=add_menu)
         member.add_command(label='Delete', command=lambda: print('Delete'))
         quiz_menu = Menu(member, tearoff=0)
@@ -33,12 +37,12 @@ class init():
             widget.destroy()
         self.top_menu()
         return
-    def insert_data_frame(self):
+    def insert_data_frame(self,name:list,title:str):
+        self.kill_all_frame()
         
-        label = Label(self.root, text='Insert Data')
+        label = Label(self.root, text=title)
         label.pack()
         
-        name = ['Word', 'part of speech', 'Meaning:1', 'part of speech', 'Meaning:2', 'part of speech', 'unit']
         number = len(name)
         bundle = [[] for i in range(number)]
         name = zip(name, range(number))
@@ -48,13 +52,18 @@ class init():
             bundle[i].append(Label(bundle[i][0], text=name[i][0]))
             bundle[i][1].pack(side='left')
             bundle[i].append(Entry(bundle[i][0]))
-            bundle[i][2].pack(side='left', fill='x')
+            bundle[i][2].pack(side='left', fill='x', expand=True)
             bundle[i][0].pack(side='top', fill='x')
 
 
         button = Button(self.root, text='Submit', command=lambda: print(entry.get()))
         button.pack(side='bottom')
-        self.root.bind('<Return>', lambda event: print('Enter pressed'))
+        def get_bundle_value(name,bundle):
+            out={}
+            for i in range(number):
+                out[name[i][0]] = bundle[i][2].get()
+            print(out)
+        self.root.bind('<Return>', lambda event: get_bundle_value(name, bundle))
         return 
 
     def run(self):
